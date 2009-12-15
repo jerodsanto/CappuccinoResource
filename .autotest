@@ -1,0 +1,5 @@
+class Autotest
+  def make_test_cmd files_to_test
+    return "jake test"
+  end
+end
