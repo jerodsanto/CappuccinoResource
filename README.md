@@ -1,12 +1,21 @@
 # CappuccinoResource #
 
-It's like ActiveResource for your Cappuccino project!
+Cappuccino on Rails. CappuccinoResource (CR) is like ActiveResource for your Cappuccino project!
 
-## About ##
+## Installation ##
+
+Install with ease using the Narwhal package manager (soon)
+
+    tusk update
+    sudo tusk install cappuccinoresource
+
+Once that completes, you can simply `@import` it into your project
+
+    @import <CappuccinoResource/CRBase.j>
 
 ## Usage ##
 
-First, create a class which inherits from CappuccinoResource:
+First, create a class which inherits from CR:
 
     @implementation Post : CappuccinoResource
     {
@@ -27,7 +36,7 @@ Instanciate a blank Post object
 
     var post = [Post new];
 
-Or declare some attributes at the same time. JSON feels like Ruby hashes!
+Optionally declare attributes at the same time. JSON feels like Ruby hashes!
 
     var post = [Post new:{"title":"First Post!","body":"Lorem and stuff"}];
 
@@ -72,14 +81,35 @@ Or the same thing with a collection
 
 The paramater JSObject will get serialized and be available to your Rails controller's `params` hash. It's up to Rails to return the appropriate records.
 
-Installation
-------------
+### Custom Identifiers ###
+
+You don't need to use the default Rails `id` in your URLS. For example, if you'd rather use the `login` attribute as a unique identifier, overwrite your class's `identifierKey` class method like this:
+
+    + (CPString)identifierKey
+    {
+        return @"login";
+    }
+
+CR will take care of the rest.
 
 Contributing
 ------------
 
+1. Fork CR
+2. Create a topic branch - `git checkout -b my_branch`
+3. Push to your branch - `git push origin my_branch`
+4. Create an Issue with a link to your branch
+5. That's all
+
 Credit
 ------
+
+Much of this library was inspired by other open-source projects, the most noteworthy of which are:
+
+1. [CPActiveRecord](http://github.com/nciagra/Cappuccino-Extensions/tree/master/CPActiveRecord/)
+2. [ObjectiveResource](http://github.com/yfactorial/objectiveresource)
+
+I'd like to thank their authors for opening their sources to others.
 
 Future Features
 ---------------
