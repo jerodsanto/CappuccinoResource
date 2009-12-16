@@ -121,11 +121,12 @@ I'd like to thank their authors for opening their source code to others.
 
 # Future Features #
 
+* Better error handling
 * Validations
 * Infer attributes from ivars
 * Nested Models
 
-# META #
+# Meta #
 
 ## Author ##
 
