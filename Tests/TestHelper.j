@@ -1,6 +1,6 @@
 // import all the necessary stuff to run tests
 @import <OJMoq/OJMoq.j>
-@import "../CappuccinoResource.j"
+@import "../Framework/CRBase.j"
 // define some classes which inherit from CR to use in testing
 
 @implementation User : CappuccinoResource

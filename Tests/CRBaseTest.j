@@ -6,7 +6,7 @@ var userCollectionJSON = '[{"user":{"id":1,"email":"one@test.com"}},' +
                           '{"user":{"id":3,"email":"three@test.com"}},]';
 
 
-@implementation CappuccinoResourceTest : OJTestCase
+@implementation CRBaseTest : OJTestCase
 
 - (void)setUp
 {
