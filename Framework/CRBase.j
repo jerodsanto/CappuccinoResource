@@ -77,6 +77,7 @@ var DefaultIdentifierKey = @"id";
     var response = [CPURLConnection sendSynchronousRequest:request];
 
     if (response[0] >= 400) {
+        [self resourceDidNotSave:response[1]];
         return NO;
     } else {
         [self resourceDidSave:response[1]];
@@ -152,8 +153,8 @@ var DefaultIdentifierKey = @"id";
 // You can observe these notifications and take further action if desired
 + (CPURLRequest)resourceWillLoad:(CPString)identifier
 {
-    var path = [self resourcePath] + "/" + identifier,
-        name = [self className] + "ResourceWillSave";
+    var path             = [self resourcePath] + "/" + identifier,
+        notificationName = [self className] + "ResourceWillSave";
 
     if (!path)
         return nil;
@@ -161,19 +162,19 @@ var DefaultIdentifierKey = @"id";
     var request = [CPURLRequest requestJSONWithURL:path];
     [request setHTTPMethod:@"GET"];
 
-    [[CPNotificationCenter defaultCenter] postNotificationName:name object:self];
+    [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
     return request;
 }
 
 + (id)resourceDidLoad:(CPString)aResponse
 {
-    var response    = [aResponse toJSON],
-        attributes  = response[[self railsName]],
-        name        = [self className] + "ResourceDidLoad",
-        resource    = [self new];
+    var response         = [aResponse toJSON],
+        attributes       = response[[self railsName]],
+        notificationName = [self className] + "ResourceDidLoad",
+        resource         = [self new];
 
     [resource setAttributes:attributes];
-    [[CPNotificationCenter defaultCenter] postNotificationName:name object:self];
+    [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
     return resource;
 }
 
@@ -184,8 +185,8 @@ var DefaultIdentifierKey = @"id";
 
 + (CPURLRequest)collectionWillLoad:(JSObject)params
 {
-    var path = [self resourcePath],
-        name = [self className] + "CollectionWillLoad";
+    var path             = [self resourcePath],
+        notificationName = [self className] + "CollectionWillLoad";
 
     if (params)
         path += ("?" + [CPString paramaterStringFromJSON:params]);
@@ -196,15 +197,15 @@ var DefaultIdentifierKey = @"id";
     var request = [CPURLRequest requestJSONWithURL:path];
     [request setHTTPMethod:@"GET"];
 
-    [[CPNotificationCenter defaultCenter] postNotificationName:name object:self];
+    [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
     return request;
 }
 
 + (CPArray)collectionDidLoad:(CPString)aResponse
 {
-    var collection    = [aResponse toJSON],
-        resourceArray = [CPArray array],
-        name          = [self className] + "CollectionDidLoad";
+    var collection       = [aResponse toJSON],
+        resourceArray    = [CPArray array],
+        notificationName = [self className] + "CollectionDidLoad";
 
     for (var i = 0; i < collection.length; i++) {
         var resource = collection[i];
@@ -212,14 +213,14 @@ var DefaultIdentifierKey = @"id";
         [resourceArray addObject:[self new:attributes]];
     }
 
-    [[CPNotificationCenter defaultCenter] postNotificationName:name object:self];
+    [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
     return resourceArray;
 }
 
 - (CPURLRequest)resourceWillSave
 {
-    var path = [[self class] resourcePath],
-        name = [self className] + "ResourceWillSave";
+    var path             = [[self class] resourcePath],
+        notificationName = [self className] + "ResourceWillSave";
 
     if (identifier)
         path += "/" + identifier;
@@ -232,31 +233,31 @@ var DefaultIdentifierKey = @"id";
     [request setHTTPMethod:identifier ? @"PUT" : @"POST"];
     [request setHTTPBody:[CPString JSONFromObject:[self attributes]]];
 
-    [[CPNotificationCenter defaultCenter] postNotificationName:name object:self];
+    [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
     return request;
 }
 
 - (void)resourceDidSave:(CPString)aResponse
 {
-    var response    = [aResponse toJSON],
-        attributes  = response[[[self class] railsName]],
-        name        = [self className] + "ResourceDidSave";
+    var response         = [aResponse toJSON],
+        attributes       = response[[[self class] railsName]],
+        notificationName = [self className] + "ResourceDidSave";
 
     [self setAttributes:attributes];
-    [[CPNotificationCenter defaultCenter] postNotificationName:name object:self];
+    [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
 }
 
 - (void)resourceDidNotSave:(CPString)aResponse
 {
     // TODO - do something with errors
-    var name = [self className] + "ResourceDidNotSave";
-    [[CPNotificationCenter defaultCenter] postNotificationName:name object:self];
+    var notificationName = [self className] + "ResourceDidNotSave";
+    [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
 }
 
 - (CPURLRequest)resourceWillDestroy
 {
-    var path = [[self class] resourcePath] + "/" + identifier,
-        name = [self className] + "ResourceWillDestroy";
+    var path             = [[self class] resourcePath] + "/" + identifier,
+        notificationName = [self className] + "ResourceWillDestroy";
 
     if (!path)
         return nil;
@@ -264,7 +265,7 @@ var DefaultIdentifierKey = @"id";
     var request = [CPURLRequest requestJSONWithURL:path];
     [request setHTTPMethod:@"DELETE"];
 
-    [[CPNotificationCenter defaultCenter] postNotificationName:name object:self];
+    [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
     return request;
 }
 
