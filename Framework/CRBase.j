@@ -246,6 +246,13 @@ var DefaultIdentifierKey = @"id";
     [[CPNotificationCenter defaultCenter] postNotificationName:name object:self];
 }
 
+- (void)resourceDidNotSave:(CPString)aResponse
+{
+    // TODO - do something with errors
+    var name = [self className] + "ResourceDidNotSave";
+    [[CPNotificationCenter defaultCenter] postNotificationName:name object:self];
+}
+
 - (CPURLRequest)resourceWillDestroy
 {
     var path = [[self class] resourcePath] + "/" + identifier,
