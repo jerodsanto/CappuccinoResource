@@ -92,27 +92,49 @@ You don't need to use the default Rails `id` in your URLS. For example, if you'd
 
 CR will take care of the rest.
 
-Contributing
-------------
+# Contributing #
+
+Please do! Like so:
 
 1. Fork CR
-2. Create a topic branch - `git checkout -b my_branch`
-3. Push to your branch - `git push origin my_branch`
-4. Create an Issue with a link to your branch
-5. That's all
+2. Pass all tests (see below)
+3. Create a topic branch - `git checkout -b my_branch`
+4. Push to your branch - `git push origin my_branch`
+5. Pass all tests
+6. Create an [Issue](http://github.com/sant0sk1/CappuccinoResource/issues) with a link to your branch
 
-Credit
-------
+## Testing ##
+
+Please include passing tests with any proposed additions/modifications. To run the test suite:
+
+1. Install ojmoq: `sudo tusk install ojmoq`
+2. Run tests with: `jake test` OR `ojtest Tests/*Test.j` OR `autotest`
+
+# Credit #
 
 Much of this library was inspired by other open-source projects, the most noteworthy of which are:
 
 1. [CPActiveRecord](http://github.com/nciagra/Cappuccino-Extensions/tree/master/CPActiveRecord/)
 2. [ObjectiveResource](http://github.com/yfactorial/objectiveresource)
 
-I'd like to thank their authors for opening their sources to others.
+I'd like to thank their authors for opening their source code to others.
 
-Future Features
----------------
+# Future Features #
+
 * Validations
-* Infer attributes from instance vars?
+* Infer attributes from ivars
 * Nested Models
+
+# META #
+
+## Author ##
+
+[Jerod Santo](http://jerodsanto.net)
+
+## Contributors ##
+
+Just me so far!
+
+## License ##
+
+[MIT](http://www.opensource.org/licenses/mit-license.php) Stylee
