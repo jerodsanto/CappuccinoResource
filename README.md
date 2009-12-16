@@ -119,11 +119,13 @@ Much of this library was inspired by other open-source projects, the most notewo
 
 I'd like to thank their authors for opening their source code to others.
 
-# Future Features #
+# Todo List #
 
+* Ignore Rails-returned fields not in -attributes
+* Infer -attributes from ivars (maybe with @property?)
 * Better error handling
 * Validations
-* Infer attributes from ivars
+* Callbacks
 * Nested Models
 
 # Meta #
