@@ -1,17 +1,18 @@
 @import <Foundation/CPObject.j>
 @import "CRSupport.j"
 
-var DefaultIdentifierKey = @"id";
+var defaultIdentifierKey = @"id";
 
 @implementation CappuccinoResource : CPObject
 {
     CPString identifier @accessors;
+    CPArray  attributeNames;
 }
 
 // override this method to use a custom identifier for lookups
 + (CPString)identifierKey
 {
-    return DefaultIdentifierKey;
+    return defaultIdentifierKey;
 }
 
 // this provides very, very basic pluralization (adding an 's').
@@ -34,13 +35,35 @@ var DefaultIdentifierKey = @"id";
     return {};
 }
 
+// switch to this if we can get attribute types
+// + (CPDictionary)attributes
+// {
+//     var array = class_copyIvarList(self),
+//         dict  = [[CPDictionary alloc] init];
+//
+//     for (var i = 0; i < array.length; i++)
+//         CPLog.warn(array[i]);
+//         [dict setObject:array[i].type forKey:array[i].name];
+//     return dict;
+// }
+
+/*
+ * I'd like to find a way to store attributeNames in a class variable
+ * instead of an instance variable, but I can't seem to use a file-scoped
+ * variable because they are not accessible by subclasses.
+*/
 - (CPArray)attributeNames
 {
-    var array = class_copyIvarList([self class]),
-        names = [CPArray array];
-    for (var i = 0; i < array.length; i++)
-        [names addObject:array[i].name];
-    return names;
+    if (attributeNames)
+        return attributeNames;
+
+    attributeNames = [CPArray array];
+    var array = class_copyIvarList([self class]);
+    for (var i = 0; i < array.length; i++) {
+        [attributeNames addObject:array[i].name];
+    }
+
+    return attributeNames;
 }
 
 - (void)setAttributes:(JSObject)attributes
@@ -49,8 +72,9 @@ var DefaultIdentifierKey = @"id";
         if (attribute == [[self class] identifierKey]) {
             [self setIdentifier:attributes[attribute].toString()];
         } else {
-            if ([[self attributeNames] containsObject:[attribute cappifiedString]])
-                [self setValue:attributes[attribute] forKey:[attribute cappifiedString]];
+            var cappifiedName = [attribute cappifiedString];
+            if ([[self attributeNames] containsObject:cappifiedName])
+                [self setValue:attributes[attribute] forKey:cappifiedName];
         }
     }
 }
