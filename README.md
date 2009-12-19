@@ -92,6 +92,20 @@ You don't need to use the default Rails `id` in your URLS. For example, if you'd
 
 CR will take care of the rest.
 
+## Notifications ##
+
+There are multiple events you can observe in the life cycle of a CR object. The notification names are comprised of the object's class name followed by the event name. So, for a `Movie` class which inherits from CR, the list of observable events are:
+
+* MovieResourceWillLoad
+* MovieResourceDidLoad
+* MovieCollectionWillLoad
+* MovieCollectionDidLoad
+* MovieResourceWillSave
+* MovieResourceDidSave
+* MovieResourceDidNotSave
+* MovieResourceWillDestroy
+* MovieResourceDidDestroy
+
 # Contributing #
 
 Please do! Like so:

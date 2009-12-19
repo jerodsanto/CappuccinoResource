@@ -94,6 +94,7 @@ var DefaultIdentifierKey = @"id";
     var response = [CPURLConnection sendSynchronousRequest:request];
 
     if (response[0] == 200) {
+        [self resourceDidDestroy];
         return YES;
     } else {
         return NO;
@@ -267,6 +268,12 @@ var DefaultIdentifierKey = @"id";
 
     [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
     return request;
+}
+
+-(void)resourceDidDestroy
+{
+    var notificationName = [self className] + "ResourceDidDestroy";
+    [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
 }
 
 @end
