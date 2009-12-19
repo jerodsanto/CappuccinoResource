@@ -38,26 +38,29 @@ var userCollectionJSON = '[{"user":{"id":1,"email":"one@test.com"}},' +
 
 - (void)testAttributes
 {
+    var expected = '{"email":"test@test.com","password":"secret","age":27}';
     [user setEmail:@"test@test.com"];
     [user setPassword:@"secret"];
-    [self assert:'{"email":"test@test.com","password":"secret"}' equals:JSON.stringify([user attributes])];
+    [user setAge:27];
+    [self assert:expected equals:JSON.stringify([user attributes])];
 }
 
 - (void)testAttributeNames
 {
-    [self assert:["email","password"] equals:[user attributeNames]];
+    [self assert:["email","password","age"] equals:[user attributeNames]];
     [self assert:["userName"] equals:[session attributeNames]];
 }
 
 - (void)testSetAttributes
 {
-    var atts1 = {"email":"test@test.com","password":"secret","id":12},
+    var atts1 = {"email":"test@test.com","password":"secret","id":12, "age":24},
         atts2 = {"token":"8675309","user_name":"dorky", "ignore":"this"};
 
     [user setAttributes:atts1];
     [self assert:@"test@test.com" equals:[user email]];
     [self assert:@"secret" equals:[user password]];
     [self assert:@"12" equals:[user identifier]];
+    [self assert:24 equals:[user age]];
 
     [session setAttributes:atts2];
     [self assert:@"dorky" equals:[session userName]];

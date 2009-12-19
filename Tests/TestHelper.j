@@ -7,11 +7,12 @@
 {
     CPString  email       @accessors;
     CPString  password    @accessors;
+    int       age         @accessors;
 }
 
 - (JSObject)attributes
 {
-    return {'email':email,'password':password};
+    return {'email':email,'password':password, 'age':age};
 }
 
 @end
