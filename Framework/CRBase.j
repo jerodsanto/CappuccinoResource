@@ -28,8 +28,19 @@ var DefaultIdentifierKey = @"id";
 
 - (JSObject)attributes
 {
-    console.log('This method must be declared in your subclass');
+    var msg = 'This method must be declared in your subclass.';
+    CPLog.warn(msg);
+    console.log(msg);
     return {};
+}
+
+- (CPArray)attributeNames
+{
+    var array = class_copyIvarList([self class]),
+        names = [CPArray array];
+    for (var i = 0; i < array.length; i++)
+        [names addObject:array[i].name];
+    return names;
 }
 
 - (void)setAttributes:(JSObject)attributes
@@ -38,7 +49,8 @@ var DefaultIdentifierKey = @"id";
         if (attribute == [[self class] identifierKey]) {
             [self setIdentifier:attributes[attribute].toString()];
         } else {
-            [self setValue:attributes[attribute] forKey:[attribute cappifiedString]];
+            if ([[self attributeNames] containsObject:[attribute cappifiedString]])
+                [self setValue:attributes[attribute] forKey:[attribute cappifiedString]];
         }
     }
 }
