@@ -6,6 +6,7 @@
 {
     [self assert:@"movies" equals:[[CPString stringWithString:@"Movies"] railsifiedString]];
     [self assert:@"movie_titles" equals:[[CPString stringWithString:@"MovieTitles"] railsifiedString]];
+    [self assert:@"movie_titles" equals:[[CPString stringWithString:@"movie_titles"] railsifiedString]];
     [self assert:@"happy_birth_day" equals:[[CPString stringWithString:@"HappyBirthDay"] railsifiedString]];
 }
 
@@ -14,6 +15,7 @@
     [self assert:@"movies" equals:[[CPString stringWithString:@"Movies"] cappifiedString]];
     [self assert:@"movieTitles" equals:[[CPString stringWithString:@"movie_titles"] cappifiedString]];
     [self assert:@"happyBirthDay" equals:[[CPString stringWithString:@"happy_birth_day"] cappifiedString]];
+    [self assert:@"happyBirthDay" equals:[[CPString stringWithString:@"happyBirthDay"] cappifiedString]];
 }
 
 - (void)testCPStringToJSONWithSingleObject

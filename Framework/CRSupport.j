@@ -29,23 +29,19 @@
     return str;
 }
 
-/* Cappuccino expects strings to be camelized with a lowercased first letter.
+/*
+ * Cappuccino expects strings to be camelized with a lowercased first letter.
  * eg - userSession, movieTitle, createdAt, etc.
  * Always use this format when declaring ivars.
 */
 - (CPString)cappifiedString
 {
-    var str=self.toLowerCase();
-    var str_path=str.split('/');
-    for(var i=0;i<str_path.length;i++) {
-      var str_arr=str_path[i].split('_');
-      var initX=((true&&i+1==str_path.length)?(1):(0));
-      for(var x=initX;x<str_arr.length;x++)
-        str_arr[x]=str_arr[x].charAt(0).toUpperCase()+str_arr[x].substring(1);
-      str_path[i]=str_arr.join('');
-    }
-    str=str_path.join('::');
-    return str;
+    var string = self.charAt(0).toLowerCase() + self.substring(1);
+    var array  = string.split('_');
+    for (var x = 1; x < array.length; x++) // skip first word
+        array[x] = array[x].charAt(0).toUpperCase() +array[x].substring(1);
+    string = array.join('');
+    return string;
 }
 
 - (JSObject)toJSON
