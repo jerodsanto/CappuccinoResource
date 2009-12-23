@@ -184,6 +184,11 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
     [self assert:@"1" equals:[result identifier]];
     [self assert:@"test@test.com" equals:[result email]];
     [self assert:@"secret" equals:[result password]];
+
+    result = [User find:1];
+    [self assert:@"1" equals:[result identifier]];
+    [self assert:@"test@test.com" equals:[result email]];
+    [self assert:@"secret" equals:[result password]];
 }
 
 - (void)testFindingWithParams
