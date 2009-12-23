@@ -60,4 +60,30 @@
     [self assert:@"application/json" equals:[request valueForHTTPHeaderField:@"Content-Type"]];
 }
 
+- (void)testCPDateDateWithDateString
+{
+    var date = [CPDate dateWithDateString:@"2009-12-31"];
+    [self assert:CPDate equals:[date class]];
+    [self assert:2009 equals:[date year]];
+    [self assert:12 equals:[date month]];
+    [self assert:31 equals:[date day]];
+}
+
+- (void)testCPDateDateWithDateTimeString
+{
+    var date = [CPDate dateWithDateTimeString:@"2009-11-30T21:50:00Z"];
+    [self assert:CPDate equals:[date class]];
+    [self assert:2009 equals:[date year]];
+    [self assert:11 equals:[date month]];
+    [self assert:30 equals:[date day]];
+}
+
+- (void)testCPDateToDateString
+{
+    var expected = @"2001-01-01",
+        date     = [CPDate dateWithDateString:expected];
+    [self assert:expected equals:[date toDateString]];
+}
+
+
 @end

@@ -19,12 +19,13 @@
 
 @implementation UserSession : CappuccinoResource
 {
-    CPString userName @accessors;
+    CPString userName  @accessors;
+    CPDate   startDate @accessors;
 }
 
 - (JSObject)attributes
 {
-    return {'user_name':userName};
+    return {'user_name':userName,'start_date':[startDate toDateString]};
 }
 
 

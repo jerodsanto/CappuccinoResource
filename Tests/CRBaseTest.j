@@ -1,9 +1,9 @@
 @import "TestHelper.j"
 
-var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"secret"}}';
-var userCollectionJSON = '[{"user":{"id":1,"email":"one@test.com"}},' +
+var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"secret"}}',
+    userCollectionJSON = '[{"user":{"id":1,"email":"one@test.com"}},' +
                           '{"user":{"id":2,"email":"two@test.com"}},' +
-                          '{"user":{"id":3,"email":"three@test.com"}},]';
+                          '{"user":{"id":3,"email":"three@test.com"}}]';
 
 
 @implementation CRBaseTest : OJTestCase
@@ -48,13 +48,14 @@ var userCollectionJSON = '[{"user":{"id":1,"email":"one@test.com"}},' +
 - (void)testAttributeNames
 {
     [self assert:["email","password","age"] equals:[user attributeNames]];
-    [self assert:["userName"] equals:[session attributeNames]];
+    [self assert:["userName","startDate"] equals:[session attributeNames]];
 }
 
 - (void)testSetAttributes
 {
-    var atts1 = {"email":"test@test.com","password":"secret","id":12, "age":24},
-        atts2 = {"token":"8675309","user_name":"dorky", "ignore":"this"};
+    var atts1 = {"email":"test@test.com", "password":"secret", "id":12, "age":24},
+        atts2 = {"token":"8675309", "user_name":"dorky", "ignore":"this","start_date":"2009-12-19"},
+        atts3 = {"token":"8675309", "user_name":"dorky", "start_date":"2007-04-01T12:34:31Z"}
 
     [user setAttributes:atts1];
     [self assert:@"test@test.com" equals:[user email]];
@@ -65,24 +66,44 @@ var userCollectionJSON = '[{"user":{"id":1,"email":"one@test.com"}},' +
     [session setAttributes:atts2];
     [self assert:@"dorky" equals:[session userName]];
     [self assert:@"8675309" equals:[session identifier]];
+    [self assert:2009 equals:[[session startDate] year]];
+    [self assert:12 equals:[[session startDate] month]];
+    [self assert:19 equals:[[session startDate] day]];
+
+    [session setAttributes:atts3];
+    [self assert:2007 equals:[[session startDate] year]];
+    [self assert:4 equals:[[session startDate] month]];
+    [self assert:1 equals:[[session startDate] day]];
 }
 
 - (void)testNewSansAttributes
 {
-    tester = [User new];
-    [self assert:User equals:[tester class]];
-    [self assert:@"User" equals:[tester className]];
-    [self assert:nil equals:[tester email]];
-    [self assert:nil equals:[tester password]];
+    tester1 = [User new];
+    [self assert:User equals:[tester1 class]];
+    [self assert:@"User" equals:[tester1 className]];
+    [self assert:nil equals:[tester1 email]];
+    [self assert:nil equals:[tester1 password]];
+
+    tester2 = [UserSession new];
+    [self assert:UserSession equals:[tester2 class]];
+    [self assert:@"UserSession" equals:[tester2 className]];
+    [self assert:nil equals:[tester2 userName]];
+    [self assert:nil equals:[tester2 startDate]];
 }
 
 - (void)testNewWithAttributes
 {
-    tester = [User new:{"email":"test@test.com", "password":"secret"}];
-    [self assert:User equals:[tester class]];
-    [self assert:@"User" equals:[tester className]];
-    [self assert:@"test@test.com" equals:[tester email]];
-    [self assert:@"secret" equals:[tester password]];
+    tester1 = [User new:{"email":"test@test.com", "password":"secret"}];
+    [self assert:User equals:[tester1 class]];
+    [self assert:@"User" equals:[tester1 className]];
+    [self assert:@"test@test.com" equals:[tester1 email]];
+    [self assert:@"secret" equals:[tester1 password]];
+
+    // tester2 = [UserSession new:{"userName":"snoop", "startDate":"2009-04-05"}];
+    // [self assert:UserSession equals:[tester2 class]];
+    // [self assert:@"UserSession" equals:[tester2 className]];
+    // [self assert:@"snoop" equals:[tester2 userName]];
+    // [self assert:@"2009-04-05" equals:[[tester2 startDate] toDateString]];
 }
 
 - (void)testResourceWillSaveWithNewResource

@@ -1,6 +1,46 @@
+@import <Foundation/CPDate.j>
 @import <Foundation/CPString.j>
 @import <Foundation/CPURLConnection.j>
 @import <Foundation/CPURLRequest.j>
+
+@implementation CPDate (CRSupport)
+
++ (CPDate)dateWithDateString:(CPString)aDate
+{
+    return [[self alloc] initWithString:aDate + " 12:00:00 +0000"];
+}
+
++ (CPDate)dateWithDateTimeString:(CPString)aDateTime
+{
+    var format = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})Z$/,
+        d      = aDateTime.match(new RegExp(format)),
+        string = d[1] + " " + d[2] + " +0000";
+
+    return [[self alloc] initWithString:string];
+}
+
+- (int)year
+{
+    return self.getFullYear();
+}
+
+- (int)month
+{
+    return self.getMonth() + 1;
+}
+
+- (int)day
+{
+    return self.getDate();
+}
+
+- (CPString)toDateString
+{
+    return [CPString stringWithFormat:@"%04d-%02d-%02d", [self year], [self month], [self day]];
+}
+
+
+@end
 
 @implementation CPString (CRSupport)
 
