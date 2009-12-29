@@ -28,7 +28,28 @@ First, create a class which inherits from CR:
         return {"title":title, "body":body};
     }
 
-The `attributes` instance method MUST be declared in your class for it to save properly. Using your new class should feel familiar to Rails devs.
+The `attributes` instance method MUST be declared in your class for it to save properly.
+
+CR takes care of the most basic of class pluralization (it just adds an "s"). If your class name has a more complex inflection, you can simply override the `resourcePath` class method. For instance, a `Person` class:
+
+    @implementation Person : CappuccinoResource
+    {
+        CPString name;
+    }
+
+    + (CPURL)resourcePath
+    {
+        return [CPURL URLWithString:@"/people"];
+    }
+
+    - (JSObject)attributes
+    {
+        return {"name":name};
+    }
+
+    @end
+
+Using your new class should feel familiar to Rails devs.
 
 ### CRUD ###
 
