@@ -47,8 +47,22 @@
 + (CPString)paramaterStringFromJSON:(JSObject)params
 {
     paramsArray = [CPArray array];
-    for (var param in params)
+
+    for (var param in params) {
         [paramsArray addObject:(escape(param) + "=" + escape(params[param]))];
+    }
+
+    return paramsArray.join("&");
+}
+
++ (CPString)paramaterStringFromCPDictionary:(CPDictionary)params
+{
+    var paramsArray = [CPArray array],
+        keys        = [params allKeys];
+
+    for (var i = 0; i < [params count]; ++i) {
+        [paramsArray addObject:(escape(keys[i]) + "=" + escape([params valueForKey:keys[i]]))];
+    }
 
     return paramsArray.join("&");
 }
@@ -66,6 +80,7 @@
     for(var i=0;i<str_path.length;i++)
       str_path[i]=str_path[i].replace(upCase,'_$1').replace(fb,'');
     str=str_path.join('/').toLowerCase();
+
     return str;
 }
 
@@ -81,6 +96,7 @@
     for (var x = 1; x < array.length; x++) // skip first word
         array[x] = array[x].charAt(0).toUpperCase() +array[x].substring(1);
     string = array.join('');
+
     return string;
 }
 
@@ -94,8 +110,9 @@
         CPLog.warn(@"Could not convert to JSON: " + str);
     }
 
-    if (obj)
+    if (obj) {
         return obj;
+    }
 }
 
 @end
@@ -123,6 +140,7 @@
         return [CPArray arrayWithObjects:request.status, request.responseText];
      }
      catch (anException) {}
+
      return nil;
 }
 

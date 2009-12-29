@@ -32,7 +32,7 @@ The `attributes` instance method MUST be declared in your class for it to save p
 
 ### CRUD ###
 
-Instanciate a blank Post object
+Instantiate a blank Post object
 
     var post = [Post new];
 
@@ -68,7 +68,7 @@ Deleting is just as easy
 
 ### More Advanced Finds ###
 
-You can also run find with JSON paramaters
+You can also run find with JSON paramaters (or a CPDictionary)
 
     var myPost = [Post findWithParams:{"title":"Oh Noes!"}];
     [myPost class]; // Post
@@ -79,7 +79,7 @@ Or the same thing with a collection
     [posts class]; // CPArray
     [[posts objectAtIndex:0] class]; // Post
 
-The paramater JSObject will get serialized and be available to your Rails controller's `params` hash. It's up to Rails to return the appropriate records.
+The parameters will get serialized and be available to your Rails controller's `params` hash. It's up to Rails to return the appropriate records.
 
 ### Custom Identifiers ###
 

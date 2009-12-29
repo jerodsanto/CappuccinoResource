@@ -242,21 +242,29 @@ var defaultIdentifierKey = @"id";
     return [self collectionWillLoad:nil];
 }
 
-+ (CPURLRequest)collectionWillLoad:(JSObject)params
+// can handle a JSObject or a CPDictionary
++ (CPURLRequest)collectionWillLoad:(id)params
 {
     var path             = [self resourcePath],
         notificationName = [self className] + "CollectionWillLoad";
 
-    if (params)
-        path += ("?" + [CPString paramaterStringFromJSON:params]);
+    if (params) {
+        if (params.isa && [params isKindOfClass:CPDictionary]) {
+            path += ("?" + [CPString paramaterStringFromCPDictionary:params]);
+        } else {
+            path += ("?" + [CPString paramaterStringFromJSON:params]);
+        }
+    }
 
-    if (!path)
+    if (!path) {
         return nil;
+    }
 
     var request = [CPURLRequest requestJSONWithURL:path];
     [request setHTTPMethod:@"GET"];
 
     [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
+
     return request;
 }
 

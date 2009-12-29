@@ -228,7 +228,6 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
     [self assert:@"three@test.com" equals:[[results objectAtIndex:2] email]];
 }
 
-
 - (void)testCollectionWillLoad
 {
     var request = [User collectionWillLoad], url = [request URL];
@@ -236,18 +235,27 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
     [self assert:@"/users" equals:[url absoluteString]];
 }
 
-- (void)testCollectionWillLoadWithOneParam
+- (void)testCollectionWillLoadWithOneJSObjectParam
 {
     var request = [User collectionWillLoad:{"password":"secret"}], url = [request URL];
     [self assert:@"GET" equals:[request HTTPMethod]];
     [self assert:@"/users?password=secret" equals:[url absoluteString]];
 }
 
-- (void)testCollectionWillLoadWithMultipleParams
+- (void)testCollectionWillLoadWithMultipleJSObjectParams
 {
     var request = [User collectionWillLoad:{"name":"joe blow","password":"secret"}], url = [request URL];
     [self assert:@"GET" equals:[request HTTPMethod]];
     [self assert:@"/users?name=joe%20blow&password=secret" equals:[url absoluteString]];
+}
+
+- (void)testCollectionWillLoadWithCPDictionary
+{
+    var params  = [CPDictionary dictionaryWithJSObject:{"name":"joe blow","password":"secret"}],
+        request = [User collectionWillLoad:params],
+        url     = [request URL];
+        [self assert:@"GET" equals:[request HTTPMethod]];
+        [self assert:@"/users?name=joe%20blow&password=secret" equals:[url absoluteString]];
 }
 
 - (void)testCollectionDidLoad

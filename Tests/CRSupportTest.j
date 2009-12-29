@@ -53,6 +53,14 @@
     [self assert:expected equals:[CPString paramaterStringFromJSON:params]];
 }
 
+- (void)testCPStringParamaterStringFromJSON
+{
+    var params   = [CPDictionary dictionaryWithJSObject:{"name":"joe","age":27,"sex":"yes please"}],
+        expected = 'name=joe&age=27&sex=yes%20please';
+    [self assert:expected equals:[CPString paramaterStringFromCPDictionary:params]];
+}
+
+
 - (void)testCPURLRequestRequestJSONWithURL
 {
     var request = [CPURLRequest requestJSONWithURL:@"/"];
