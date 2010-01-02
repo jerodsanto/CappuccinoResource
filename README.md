@@ -54,18 +54,27 @@ Create a class which inherits from CR:
 
     @implementation Post : CappuccinoResource
     {
-        CPString title @accessors;
-        CPString body  @accessors;
+        CPString title        @accessors;
+        CPString body         @accessors;
+        CPDate   publishedOn;
+        BOOL     isViewable;
     }
 
     - (JSObject)attributes
     {
-        return {"title":title, "body":body};
+        return {
+          "post": {
+            "title":title,
+            "body":body,
+            "published_on":[publishedOn toDateString],
+            "is_viewable":isViewable
+          }
+        };
     }
 
 The `attributes` instance method MUST be declared in your class for it to save properly.
 
-CR takes care of the most basic of class pluralization (it just adds an "s"). If your class name has a more complex inflection, you can simply override the `resourcePath` class method. For instance, a `Person` class:
+CR performs naïve class pluralization (it just adds an "s"). If your class name has a more complex inflection, you can simply override the `resourcePath` class method. For instance, a `Person` class:
 
     @implementation Person : CappuccinoResource
     {
@@ -79,7 +88,7 @@ CR takes care of the most basic of class pluralization (it just adds an "s"). If
 
     - (JSObject)attributes
     {
-        return {"name":name};
+        return {"person":{"name":name}};
     }
 
     @end
