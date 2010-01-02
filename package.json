@@ -1,0 +1,8 @@
+{
+    "name": "cappuccinoresource",
+    "dependencies": ["narwhal", "objective-j"],
+    "author": "Jerod Santo",
+    "description": "Cappuccino on Rails",
+    "keywords": ["objective-j", "cappuccino", "rails", "resource"],
+    "objj-frameworks": ["Framework"]
+}
