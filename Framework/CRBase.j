@@ -80,6 +80,13 @@ var defaultIdentifierKey = @"id";
                  * response from Rails, but objective-j does not support this.
                 */
                 switch (typeof value) {
+                    case "boolean":
+                        if (value) {
+                            [self setValue:YES forKey:attributeName];
+                        } else {
+                            [self setValue:NO forKey:attributeName];
+                        }
+                        break;
                     case "number":
                         [self setValue:value forKey:attributeName];
                         break;

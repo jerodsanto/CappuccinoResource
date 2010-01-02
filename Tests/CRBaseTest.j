@@ -47,13 +47,13 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
 
 - (void)testAttributeNames
 {
-    [self assert:["email","password","age"] equals:[user attributeNames]];
+    [self assert:["email","password","age","isAlive"] equals:[user attributeNames]];
     [self assert:["userName","startDate"] equals:[session attributeNames]];
 }
 
 - (void)testSetAttributes
 {
-    var atts1 = {"email":"test@test.com", "password":"secret", "id":12, "age":24},
+    var atts1 = {"email":"test@test.com", "password":"secret", "id":12, "age":24, "is_alive":true},
         atts2 = {"token":"8675309", "user_name":"dorky", "ignore":"this","start_date":"2009-12-19"},
         atts3 = {"token":"8675309", "user_name":"dorky", "start_date":"2007-04-01T12:34:31Z"}
 
@@ -62,6 +62,7 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
     [self assert:@"secret" equals:[user password]];
     [self assert:@"12" equals:[user identifier]];
     [self assert:24 equals:[user age]];
+    [self assert:true equals:[user isAlive]];
 
     [session setAttributes:atts2];
     [self assert:@"dorky" equals:[session userName]];
@@ -99,11 +100,11 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
     [self assert:@"test@test.com" equals:[tester1 email]];
     [self assert:@"secret" equals:[tester1 password]];
 
-    // tester2 = [UserSession new:{"userName":"snoop", "startDate":"2009-04-05"}];
-    // [self assert:UserSession equals:[tester2 class]];
-    // [self assert:@"UserSession" equals:[tester2 className]];
-    // [self assert:@"snoop" equals:[tester2 userName]];
-    // [self assert:@"2009-04-05" equals:[[tester2 startDate] toDateString]];
+    tester2 = [UserSession new:{"userName":"snoop", "startDate":"2009-04-05"}];
+    [self assert:UserSession equals:[tester2 class]];
+    [self assert:@"UserSession" equals:[tester2 className]];
+    [self assert:@"snoop" equals:[tester2 userName]];
+    [self assert:@"2009-04-05" equals:[[tester2 startDate] toDateString]];
 }
 
 - (void)testResourceWillSaveWithNewResource

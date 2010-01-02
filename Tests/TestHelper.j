@@ -8,6 +8,7 @@
     CPString  email       @accessors;
     CPString  password    @accessors;
     int       age         @accessors;
+    BOOL      isAlive     @accessors;
 }
 
 - (JSObject)attributes
