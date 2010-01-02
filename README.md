@@ -4,10 +4,10 @@ Cappuccino on Rails. CappuccinoResource (CR) is like ActiveResource for your Cap
 
 ## Installation ##
 
-Install with ease using the Narwhal package manager (soon)
+Install with ease using the Narwhal package manager
 
     tusk update
-    sudo tusk install cappuccinoresource
+    sudo tusk install CappuccinoResource
 
 Once that completes, you can simply `@import` it into your project
 
