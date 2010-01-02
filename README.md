@@ -15,7 +15,42 @@ Once that completes, you can simply `@import` it into your project
 
 ## Usage ##
 
-First, create a class which inherits from CR:
+### In Rails ###
+
+Make sure your RESTful controllers render json. You can take or leave the `respond_to` block depending on your needs.
+
+Rails 2 Example:
+
+    class PostsController < ApplicationController
+
+      def index
+        @posts = Post.all
+
+        respond_to do |format|
+          format.html
+          format.json { render :json => @posts }
+        end
+      end
+
+      # other actions ...
+    end
+
+Rails 3 Example:
+
+    class PostsController < ApplicationController
+      respond_to :html, :json
+
+      def index
+        @posts = Post.all
+        respond_with(@posts)
+      end
+
+      # other actions ...
+    end
+
+### In Capp ###
+
+Create a class which inherits from CR:
 
     @implementation Post : CappuccinoResource
     {
@@ -156,7 +191,6 @@ I'd like to thank their authors for opening their source code to others.
 
 # Todo List #
 
-* Ignore Rails-returned fields not in -attributes
 * Infer -attributes from ivars (maybe with @property?)
 * Better error handling
 * Validations
