@@ -15,6 +15,8 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
     // mock network connections
     oldCPURLConnection = CPURLConnection;
     CPURLConnection = moq();
+    // setup an obvserver
+    observer = [[Observer alloc] init];
 }
 
 - (void)tearDown
@@ -22,6 +24,7 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
     // destroy mock
     [CPURLConnection verifyThatAllExpectationsHaveBeenMet];
     CPURLConnection = oldCPURLConnection;
+    [observer reset];
 }
 
 - (void)testIdentifierKey
@@ -109,72 +112,104 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
 
 - (void)testResourceWillSaveWithNewResource
 {
+    [observer startObserving:@"UserResourceWillSave"];
+    [observer startObserving:@"UserResourceWillCreate"];
     var request = [user resourceWillSave], url = [request URL];
     [self assert:@"POST" equals:[request HTTPMethod]];
     [self assert:@"/users" equals:[url absoluteString]];
+    [self assertTrue:[observer didObserve:@"UserResourceWillSave"]];
+    [self assertTrue:[observer didObserve:@"UserResourceWillCreate"]];
+    [self assertFalse:[observer didObserve:@"UserResourceWillUpdate"]];
 }
 
 - (void)testResourceWillSaveWithExistingResource
 {
+    [observer startObserving:@"UserResourceWillSave"];
+    [observer startObserving:@"UserResourceWillUpdate"];
     [user setIdentifier:@"42"];
     var request = [user resourceWillSave], url = [request URL];
     [self assert:@"PUT" equals:[request HTTPMethod]];
     [self assert:@"/users/42" equals:[url absoluteString]];
+    [self assertTrue:[observer didObserve:@"UserResourceWillSave"]];
+    [self assertTrue:[observer didObserve:@"UserResourceWillUpdate"]];
+    [self assertFalse:[observer didObserve:@"UserResourceWillCreate"]];
 }
 
 - (void)testSuccessfulSaveWithNewResource
 {
+    [observer startObserving:@"UserResourceDidSave"];
+    [observer startObserving:@"UserResourceDidCreate"];
     var response = [201, userResourceJSON];
     [CPURLConnection selector:@selector(sendSynchronousRequest:) returns:response];
     [self assertTrue:[user save]];
+    [self assertTrue:[observer didObserve:@"UserResourceDidSave"]];
+    [self assertTrue:[observer didObserve:@"UserResourceDidCreate"]];
 }
 
 - (void)testFailedSaveWithNewResource
 {
+    [observer startObserving:@"UserResourceDidNotSave"];
+    [observer startObserving:@"UserResourceDidNotCreate"];
     var response = [422,'["email","already in use"]'];
     [CPURLConnection selector:@selector(sendSynchronousRequest:) returns:response];
     [self assertFalse:[user save]];
+    [self assertTrue:[observer didObserve:@"UserResourceDidNotSave"]];
+    [self assertTrue:[observer didObserve:@"UserResourceDidNotCreate"]];
 }
 
 - (void)testSuccessfulCreate
 {
+    [observer startObserving:@"UserResourceDidSave"];
+    [observer startObserving:@"UserResourceDidCreate"];
     var response = [201,userResourceJSON];
     [CPURLConnection selector:@selector(sendSynchronousRequest:) returns:response];
     var result = [User create:{"email":"test@test.com", "password":"secret"}];
     [self assert:@"1" equals:[result identifier]];
     [self assert:@"test@test.com" equals:[result email]];
     [self assert:@"secret" equals:[result password]];
+    [self assertTrue:[observer didObserve:@"UserResourceDidSave"]];
+    [self assertTrue:[observer didObserve:@"UserResourceDidCreate"]];
 }
 
 - (void)testFailedCreate
 {
+    [observer startObserving:@"UserResourceDidNotSave"];
+    [observer startObserving:@"UserResourceDidNotCreate"];
     var response = [422,'["email","already in use"]'];
     [CPURLConnection selector:@selector(sendSynchronousRequest:) returns:response];
     var result = [User create:{"email":"test@test.com", "password":"secret"}];
     [self assertNull:result];
+    [self assertTrue:[observer didObserve:@"UserResourceDidNotSave"]];
+    [self assertTrue:[observer didObserve:@"UserResourceDidNotCreate"]];
 }
 
 - (void)testDestroy
 {
+    [observer startObserving:@"UserResourceDidDestroy"];
     var response = [200,''];
     [CPURLConnection selector:@selector(sendSynchronousRequest:) returns:response];
     [self assertTrue:[user destroy]];
+    [self assertTrue:[observer didObserve:@"UserResourceDidDestroy"]];
 }
 
 - (void)testResourceWillLoad
 {
+    [observer startObserving:@"UserResourceWillLoad"];
     var request = [User resourceWillLoad:@"42"], url = [request URL];
     [self assert:@"GET" equals:[request HTTPMethod]];
     [self assert:@"/users/42" equals:[url absoluteString]];
+    [self assertTrue:[observer didObserve:@"UserResourceWillLoad"]];
 }
 
 - (void)testResourceDidLoad
 {
+    [observer startObserving:@"UserResourceDidLoad"];
     var response = userResourceJSON,
         resource = [User resourceDidLoad:response];
     [self assert:@"1" equals:[resource identifier]];
     [self assert:@"test@test.com" equals:[resource email]];
     [self assert:@"secret" equals:[resource password]];
+    [self assertTrue:[observer didObserve:@"UserResourceDidLoad"]];
 }
 
 - (void)testFindingByIdentifierKey
@@ -231,36 +266,45 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
 
 - (void)testCollectionWillLoad
 {
+    [observer startObserving:@"UserCollectionWillLoad"];
     var request = [User collectionWillLoad], url = [request URL];
     [self assert:@"GET" equals:[request HTTPMethod]];
     [self assert:@"/users" equals:[url absoluteString]];
+    [self assertTrue:[observer didObserve:@"UserCollectionWillLoad"]];
 }
 
 - (void)testCollectionWillLoadWithOneJSObjectParam
 {
+    [observer startObserving:@"UserCollectionWillLoad"];
     var request = [User collectionWillLoad:{"password":"secret"}], url = [request URL];
     [self assert:@"GET" equals:[request HTTPMethod]];
     [self assert:@"/users?password=secret" equals:[url absoluteString]];
+    [self assertTrue:[observer didObserve:@"UserCollectionWillLoad"]];
 }
 
 - (void)testCollectionWillLoadWithMultipleJSObjectParams
 {
+    [observer startObserving:@"UserCollectionWillLoad"];
     var request = [User collectionWillLoad:{"name":"joe blow","password":"secret"}], url = [request URL];
     [self assert:@"GET" equals:[request HTTPMethod]];
     [self assert:@"/users?name=joe%20blow&password=secret" equals:[url absoluteString]];
+    [self assertTrue:[observer didObserve:@"UserCollectionWillLoad"]];
 }
 
 - (void)testCollectionWillLoadWithCPDictionary
 {
+    [observer startObserving:@"UserCollectionWillLoad"];
     var params  = [CPDictionary dictionaryWithJSObject:{"name":"joe blow","password":"secret"}],
         request = [User collectionWillLoad:params],
         url     = [request URL];
-        [self assert:@"GET" equals:[request HTTPMethod]];
-        [self assert:@"/users?name=joe%20blow&password=secret" equals:[url absoluteString]];
+    [self assert:@"GET" equals:[request HTTPMethod]];
+    [self assert:@"/users?name=joe%20blow&password=secret" equals:[url absoluteString]];
+    [self assertTrue:[observer didObserve:@"UserCollectionWillLoad"]];
 }
 
 - (void)testCollectionDidLoad
 {
+    [observer startObserving:@"UserCollectionDidLoad"];
     var response   = userCollectionJSON,
         collection = [User collectionDidLoad:response];
     [self assert:CPArray equals:[collection class]];
@@ -271,6 +315,7 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
     [self assert:@"one@test.com" equals:[[collection objectAtIndex:0] email]];
     [self assert:@"two@test.com" equals:[[collection objectAtIndex:1] email]];
     [self assert:@"three@test.com" equals:[[collection objectAtIndex:2] email]];
+    [self assertTrue:[observer didObserve:@"UserCollectionDidLoad"]];
 }
 
 @end

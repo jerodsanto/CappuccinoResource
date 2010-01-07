@@ -1,6 +1,48 @@
 // import all the necessary stuff to run tests
+@import <Foundation/CPObject.j>
 @import <OJMoq/OJMoq.j>
 @import "../Framework/CRBase.j"
+
+@implementation Observer : CPObject
+{
+    CPArray _postedNotifications;
+}
+
+- (id)init
+{
+    if (self = [super init])
+    {
+        [self reset];
+    }
+    return self;
+}
+
+- (void)reset
+{
+    _postedNotifications   = [CPArray array];
+    [[CPNotificationCenter defaultCenter] removeObserver:self];
+}
+
+- (void)startObserving:(CPString)aNotificationName
+{
+    [[CPNotificationCenter defaultCenter] addObserver:self
+                                             selector:@selector(notificationPosted:)
+                                                 name:aNotificationName
+                                               object:nil];
+}
+
+- (void)notificationPosted:(id)sender
+{
+    [_postedNotifications addObject:[sender name]];
+}
+
+- (BOOL)didObserve:(CPString)aNotificationName
+{
+    return [_postedNotifications containsObject:aNotificationName];
+}
+
+@end
+
 // define some classes which inherit from CR to use in testing
 
 @implementation User : CappuccinoResource
