@@ -127,17 +127,20 @@ var defaultIdentifierKey = @"id";
 + (id)create:(JSObject)attributes
 {
     var resource = [self new:attributes];
-    if ([resource save])
+    if ([resource save]) {
         return resource;
-    else
+    } else {
         return nil;
+    }
 }
 
 - (BOOL)save
 {
     var request = [self resourceWillSave];
-    if (!request)
+
+    if (!request) {
         return NO;
+    }
 
     var response = [CPURLConnection sendSynchronousRequest:request];
 
@@ -153,8 +156,10 @@ var defaultIdentifierKey = @"id";
 - (BOOL)destroy
 {
     var request = [self resourceWillDestroy];
-    if (!request)
+
+    if (!request) {
         return NO;
+    }
 
     var response = [CPURLConnection sendSynchronousRequest:request];
 
@@ -169,8 +174,10 @@ var defaultIdentifierKey = @"id";
 + (CPArray)all
 {
     var request = [self collectionWillLoad];
-    if (!request)
+
+    if (!request) {
         return NO;
+    }
 
     var response = [CPURLConnection sendSynchronousRequest:request];
 
@@ -197,8 +204,10 @@ var defaultIdentifierKey = @"id";
 + (id)find:(CPString)identifier
 {
     var request = [self resourceWillLoad:identifier];
-    if (!request)
+
+    if (!request) {
         return NO;
+    }
 
     var response = [CPURLConnection sendSynchronousRequest:request];
 
@@ -220,10 +229,11 @@ var defaultIdentifierKey = @"id";
 + (CPURLRequest)resourceWillLoad:(CPString)identifier
 {
     var path             = [self resourcePath] + "/" + identifier,
-        notificationName = [self className] + "ResourceWillSave";
+        notificationName = [self className] + "ResourceWillLoad";
 
-    if (!path)
+    if (!path) {
         return nil;
+    }
 
     var request = [CPURLRequest requestJSONWithURL:path];
     [request setHTTPMethod:@"GET"];
@@ -293,14 +303,19 @@ var defaultIdentifierKey = @"id";
 
 - (CPURLRequest)resourceWillSave
 {
-    var path             = [[self class] resourcePath],
-        notificationName = [self className] + "ResourceWillSave";
+    var abstractNotificationName = [self className] + "ResourceWillSave";
 
-    if (identifier)
-        path += "/" + identifier;
+    if (identifier) {
+        var path             = [[self class] resourcePath] + "/" + identifier,
+            notificationName = [self className] + "ResourceWillUpdate";
+    } else {
+        var path             = [[self class] resourcePath],
+            notificationName = [self className] + "ResourceWillCreate";
+    }
 
-    if (!path)
+    if (!path) {
         return nil;
+    }
 
     var request = [CPURLRequest requestJSONWithURL:path];
 
@@ -308,24 +323,40 @@ var defaultIdentifierKey = @"id";
     [request setHTTPBody:[CPString JSONFromObject:[self attributes]]];
 
     [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
+    [[CPNotificationCenter defaultCenter] postNotificationName:abstractNotificationName object:self];
     return request;
 }
 
 - (void)resourceDidSave:(CPString)aResponse
 {
-    var response         = [aResponse toJSON],
-        attributes       = response[[[self class] railsName]],
-        notificationName = [self className] + "ResourceDidSave";
+    var response                 = [aResponse toJSON],
+        attributes               = response[[[self class] railsName]],
+        abstractNotificationName = [self className] + "ResourceDidSave";
+
+    if (identifier) {
+        var notificationName = [self className] + "ResourceDidUpdate";
+    } else {
+        var notificationName = [self className] + "ResourceDidCreate";
+    }
 
     [self setAttributes:attributes];
     [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
+    [[CPNotificationCenter defaultCenter] postNotificationName:abstractNotificationName object:self];
 }
 
 - (void)resourceDidNotSave:(CPString)aResponse
 {
+    var abstractNotificationName = [self className] + "ResourceDidNotSave";
+
     // TODO - do something with errors
-    var notificationName = [self className] + "ResourceDidNotSave";
+    if (identifier) {
+        var notificationName = [self className] + "ResourceDidNotUpdate";
+    } else {
+        var notificationName = [self className] + "ResourceDidNotCreate";
+    }
+
     [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
+    [[CPNotificationCenter defaultCenter] postNotificationName:abstractNotificationName object:self];
 }
 
 - (CPURLRequest)resourceWillDestroy
@@ -333,8 +364,9 @@ var defaultIdentifierKey = @"id";
     var path             = [[self class] resourcePath] + "/" + identifier,
         notificationName = [self className] + "ResourceWillDestroy";
 
-    if (!path)
+    if (!path) {
         return nil;
+    }
 
     var request = [CPURLRequest requestJSONWithURL:path];
     [request setHTTPMethod:@"DELETE"];
