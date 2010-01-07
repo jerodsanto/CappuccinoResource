@@ -166,10 +166,18 @@ There are multiple events you can observe in the life cycle of a CR object. The 
 * MovieCollectionWillLoad
 * MovieCollectionDidLoad
 * MovieResourceWillSave
+* MovieResourceWillCreate
+* MovieResourceWillUpdate
 * MovieResourceDidSave
+* MovieResourceDidCreate
+* MovieResourceDidUpdate
 * MovieResourceDidNotSave
+* MovieResourceDidNotCreate
+* MovieResourceDidNotUpdate
 * MovieResourceWillDestroy
 * MovieResourceDidDestroy
+
+One thing worth pointing out; whenever you try to save a resource, it will post 2 notifications per event. The first is the Will/Did/DidNot Save notification. The second is either Will/Did/DidNot Create or Will/Did/DidNot Update depending on what type of a save it is.
 
 # Contributing #
 
