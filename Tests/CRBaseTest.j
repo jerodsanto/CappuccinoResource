@@ -24,7 +24,6 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
     // destroy mock
     [CPURLConnection verifyThatAllExpectationsHaveBeenMet];
     CPURLConnection = oldCPURLConnection;
-    [observer reset];
 }
 
 - (void)testIdentifierKey

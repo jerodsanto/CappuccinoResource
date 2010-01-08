@@ -12,15 +12,9 @@
 {
     if (self = [super init])
     {
-        [self reset];
+        _postedNotifications   = [CPArray array];
     }
     return self;
-}
-
-- (void)reset
-{
-    _postedNotifications   = [CPArray array];
-    [[CPNotificationCenter defaultCenter] removeObserver:self];
 }
 
 - (void)startObserving:(CPString)aNotificationName
