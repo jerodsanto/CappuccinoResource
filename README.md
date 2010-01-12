@@ -4,7 +4,11 @@ Cappuccino on Rails. CappuccinoResource (CR) is like ActiveResource for your Cap
 
 ## Installation ##
 
-Install with ease using the Narwhal package manager
+Install CR manually by copying /Framework/CRBase.j and /Framework/CRSupport.j into your application and `@import` CRBase.j into your project where needed
+
+    @import "CRBase.j"
+
+(COMING SOON) Install with ease using the Narwhal package manager
 
     tusk update
     sudo tusk install CappuccinoResource
@@ -14,6 +18,8 @@ Once that completes, you can simply `@import` it into your project
     @import <CappuccinoResource/CRBase.j>
 
 ## Usage ##
+
+There is now an open-source demo application demonstrating basic usage. The demo is available [on Heroku](http://capp-resource-example.heroku.com), and the source is available [on GitHub](http://github.com/sant0sk1/CappResourceExample). For more detailed instructions, read on.
 
 ### In Rails ###
 
