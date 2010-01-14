@@ -4,7 +4,7 @@ Cappuccino on Rails. CappuccinoResource (CR) is like ActiveResource for your Cap
 
 ## Installation ##
 
-Install CR manually by copying /Framework/CRBase.j and /Framework/CRSupport.j into your application and `@import` CRBase.j into your project where needed
+Install CR manually by copying /Framework/CappuccinoResource/CRBase.j and /Framework/CappuccinoResource/CRSupport.j into your application and `@import` CRBase.j into your project where needed
 
     @import "CRBase.j"
 

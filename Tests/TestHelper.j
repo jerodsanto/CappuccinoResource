@@ -1,7 +1,7 @@
 // import all the necessary stuff to run tests
 @import <Foundation/CPObject.j>
 @import <OJMoq/OJMoq.j>
-@import "../Framework/CRBase.j"
+@import "../Framework/CappuccinoResource/CRBase.j"
 
 @implementation Observer : CPObject
 {
