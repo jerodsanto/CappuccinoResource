@@ -1,12 +1,12 @@
 @import <Foundation/CPObject.j>
 @import "CRSupport.j"
 
-var defaultIdentifierKey = @"id";
+var defaultIdentifierKey = @"id",
+    classAttributeNames  = [CPDictionary dictionary];
 
 @implementation CappuccinoResource : CPObject
 {
     CPString identifier @accessors;
-    CPArray  attributeNames;
 }
 
 // override this method to use a custom identifier for lookups
@@ -29,9 +29,7 @@ var defaultIdentifierKey = @"id";
 
 - (JSObject)attributes
 {
-    var msg = 'This method must be declared in your subclass.';
-    CPLog.warn(msg);
-    console.log(msg);
+    CPLog.warn('This method must be declared in your class to save properly.');
     return {};
 }
 
@@ -42,26 +40,24 @@ var defaultIdentifierKey = @"id";
 //         dict  = [[CPDictionary alloc] init];
 //
 //     for (var i = 0; i < array.length; i++)
-//         CPLog.warn(array[i]);
 //         [dict setObject:array[i].type forKey:array[i].name];
 //     return dict;
 // }
 
-/*
- * I'd like to find a way to store attributeNames in a class variable
- * instead of an instance variable, but I can't seem to use a file-scoped
- * variable because they are not accessible by subclasses.
-*/
 - (CPArray)attributeNames
 {
-    if (attributeNames)
-        return attributeNames;
-
-    attributeNames = [CPArray array];
-    var array = class_copyIvarList([self class]);
-    for (var i = 0; i < array.length; i++) {
-        [attributeNames addObject:array[i].name];
+    if ([classAttributeNames objectForKey:[self className]]) {
+        return [classAttributeNames objectForKey:[self className]];
     }
+
+    var attributeNames = [CPArray array],
+        attributes     = class_copyIvarList([self class]);
+
+    for (var i = 0; i < attributes.length; i++) {
+        [attributeNames addObject:attributes[i].name];
+    }
+
+    [classAttributeNames setObject:attributeNames forKey:[self className]];
 
     return attributeNames;
 }
