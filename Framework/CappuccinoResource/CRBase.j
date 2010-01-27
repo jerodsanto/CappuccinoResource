@@ -246,7 +246,7 @@ var defaultIdentifierKey = @"id",
         resource         = [self new];
 
     [resource setAttributes:attributes];
-    [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
+    [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:resource];
     return resource;
 }
 
@@ -293,7 +293,7 @@ var defaultIdentifierKey = @"id",
         [resourceArray addObject:[self new:attributes]];
     }
 
-    [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:self];
+    [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:resourceArray];
     return resourceArray;
 }
 
