@@ -124,20 +124,20 @@
 + (CPArray)sendSynchronousRequest:(CPURLRequest)aRequest
 {
     try {
-        var request = objj_request_xmlhttp();
-
+        var request = new CFHTTPRequest();
+ 
         request.open([aRequest HTTPMethod], [[aRequest URL] absoluteString], NO);
-
+ 
         var fields = [aRequest allHTTPHeaderFields],
             key = nil,
             keys = [fields keyEnumerator];
-
+ 
         while (key = [keys nextObject])
             request.setRequestHeader(key, [fields objectForKey:key]);
-
+ 
         request.send([aRequest HTTPBody]);
-
-        return [CPArray arrayWithObjects:request.status, request.responseText];
+ 
+        return [CPArray arrayWithObjects:request.status(), request.responseText()];
      }
      catch (anException) {}
 
