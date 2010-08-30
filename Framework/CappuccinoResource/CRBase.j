@@ -325,9 +325,12 @@ var defaultIdentifierKey = @"id",
 
 - (void)resourceDidSave:(CPString)aResponse
 {
-    var response                 = [aResponse toJSON],
-        attributes               = response[[[self class] railsName]],
-        abstractNotificationName = [self className] + "ResourceDidSave";
+    if ([aResponse length] < 1)
+    {
+        var response    = [aResponse toJSON],
+            attributes  = response[[[self class] railsName]];
+    }
+    var abstractNotificationName = [self className] + "ResourceDidSave";
 
     if (identifier) {
         var notificationName = [self className] + "ResourceDidUpdate";
