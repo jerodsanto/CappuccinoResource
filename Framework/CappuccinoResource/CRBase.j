@@ -325,7 +325,7 @@ var defaultIdentifierKey = @"id",
 
 - (void)resourceDidSave:(CPString)aResponse
 {
-    if ([aResponse length] < 1)
+    if ([aResponse length] > 1)
     {
         var response    = [aResponse toJSON],
             attributes  = response[[[self class] railsName]];
