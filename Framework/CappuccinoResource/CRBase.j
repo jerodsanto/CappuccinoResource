@@ -216,8 +216,12 @@ var defaultIdentifierKey = @"id",
 
 + (id)findWithParams:(JSObject)params
 {
-    var collection = [self allWithParams:params];
-    return [collection objectAtIndex:0];
+	var collection = [self allWithParams:params];
+	
+	if ([collection count] > 0)
+    	return [collection objectAtIndex:0];
+	else
+		return nil;	
 }
 
 // All the following methods post notifications using their class name
@@ -283,16 +287,20 @@ var defaultIdentifierKey = @"id",
 
 + (CPArray)collectionDidLoad:(CPString)aResponse
 {
-    var collection       = [aResponse toJSON],
-        resourceArray    = [CPArray array],
-        notificationName = [self className] + "CollectionDidLoad";
+	var resourceArray    = [CPArray array],
+		notificationName = [self className] + "CollectionDidLoad";
+	
+	if ([[aResponse stringByTrimmingWhitespace] length] > 0)
+	{
+		var collection       = [aResponse toJSON];        
 
-    for (var i = 0; i < collection.length; i++) {
-        var resource = collection[i];
-        var attributes = resource[[self railsName]];
-        [resourceArray addObject:[self new:attributes]];
-    }
-
+	    for (var i = 0; i < collection.length; i++) {
+	        var resource = collection[i];
+	        var attributes = resource[[self railsName]];
+	        [resourceArray addObject:[self new:attributes]];
+	    }
+	}
+	
     [[CPNotificationCenter defaultCenter] postNotificationName:notificationName object:resourceArray];
     return resourceArray;
 }
