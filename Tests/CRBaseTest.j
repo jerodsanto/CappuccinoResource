@@ -233,6 +233,11 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
     var result = [User findWithParams:{"email":"test"}];
     [self assert:@"1" equals:[result identifier]];
     [self assert:@"one@test.com" equals:[result email]];
+
+    var response = [201, ""];
+    [CPURLConnection selector:@selector(sendSynchronousRequest:) returns:response];
+    var result = [User findWithParams:{"email":"test"}];
+    [self assert:nil equals:result];
 }
 
 - (void)testFindingAll
