@@ -58,6 +58,7 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
     var atts1 = {"email":"test@test.com", "password":"secret", "id":12, "age":24, "is_alive":true},
         atts2 = {"token":"8675309", "user_name":"dorky", "ignore":"this","start_date":"2009-12-19"},
         atts3 = {"token":"8675309", "user_name":"dorky", "start_date":"2007-04-01T12:34:31Z"}
+        atts4 = {"token":"1337", "user_name":"dutchman", "start_date":"2011-08-13T11:42:51+01:00"}
 
     [user setAttributes:atts1];
     [self assert:@"test@test.com" equals:[user email]];
@@ -77,6 +78,11 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
     [self assert:2007 equals:[[session startDate] year]];
     [self assert:4 equals:[[session startDate] month]];
     [self assert:1 equals:[[session startDate] day]];
+
+    [session setAttributes:atts4];
+    [self assert:2011 equals:[[session startDate] year]];
+    [self assert:8 equals:[[session startDate] month]];
+    [self assert:13 equals:[[session startDate] day]];
 }
 
 - (void)testNewSansAttributes

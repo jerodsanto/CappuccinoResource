@@ -90,7 +90,7 @@ var defaultIdentifierKey = @"id",
                         if (value.match(/^\d{4}-\d{2}-\d{2}$/)) {
                             // its a date
                             [self setValue:[CPDate dateWithDateString:value] forKey:attributeName];
-                        } else if (value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}Z$/)) {
+                        } else if (value.match(/^\d{4}-\d{2}-\d{2}T\d{2}:\d{2}:\d{2}(\+\d{2}:\d{2}|Z)$/)) {
                             // its a datetime
                             [self setValue:[CPDate dateWithDateTimeString:value] forKey:attributeName];
                         } else {
