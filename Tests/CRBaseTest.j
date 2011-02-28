@@ -245,7 +245,7 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
     var response = [201,userCollectionJSON];
     [CPURLConnection selector:@selector(sendSynchronousRequest:) returns:response];
     var results = [User all];
-    [self assert:CPArray equals:[results class]];
+    [self assert:_CPJavaScriptArray equals:[results class]];
     [self assert:@"1" equals:[[results objectAtIndex:0] identifier]];
     [self assert:@"2" equals:[[results objectAtIndex:1] identifier]];
     [self assert:@"3" equals:[[results objectAtIndex:2] identifier]];
@@ -259,7 +259,7 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
     var response = [201,userCollectionJSON];
     [CPURLConnection selector:@selector(sendSynchronousRequest:) returns:response];
     var results = [User allWithParams:{"email":"test"}];
-    [self assert:CPArray equals:[results class]];
+    [self assert:_CPJavaScriptArray equals:[results class]];
     [self assert:@"1" equals:[[results objectAtIndex:0] identifier]];
     [self assert:@"2" equals:[[results objectAtIndex:1] identifier]];
     [self assert:@"3" equals:[[results objectAtIndex:2] identifier]];
@@ -311,7 +311,7 @@ var userResourceJSON   = '{"user":{"id":1,"email":"test@test.com","password":"se
     [observer startObserving:@"UserCollectionDidLoad"];
     var response   = userCollectionJSON,
         collection = [User collectionDidLoad:response];
-    [self assert:CPArray equals:[collection class]];
+    [self assert:_CPJavaScriptArray equals:[collection class]];
     [self assert:User equals:[[collection objectAtIndex:0] class]];
     [self assert:@"1" equals:[[collection objectAtIndex:0] identifier]];
     [self assert:@"2" equals:[[collection objectAtIndex:1] identifier]];
