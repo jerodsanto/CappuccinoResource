@@ -86,6 +86,15 @@
     [self assert:30 equals:[date day]];
 }
 
+- (void)testCPDateDateWithTimezoneDateTimeString
+{
+    var date = [CPDate dateWithDateTimeString:@"2011-02-28T11:47:51+01:00"];
+    [self assert:CPDate equals:[date class]];
+    [self assert:2011 equals:[date year]];
+    [self assert:02 equals:[date month]];
+    [self assert:28 equals:[date day]];
+}
+
 - (void)testCPDateToDateString
 {
     var expected = @"2001-01-01",

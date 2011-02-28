@@ -12,10 +12,13 @@
 
 + (CPDate)dateWithDateTimeString:(CPString)aDateTime
 {
-    var format = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})Z$/,
-        d      = aDateTime.match(new RegExp(format)),
-        string = d[1] + " " + d[2] + " +0000";
+    var format = /^(\d{4}-\d{2}-\d{2})T(\d{2}:\d{2}:\d{2})(\+\d{2}:\d{2}|Z)?$/,
+        d      = aDateTime.match(new RegExp(format));
 
+    if (d[3] === 'Z')
+        d[3] = '+00:00';
+
+    var string = d[1] + " " + d[2] + " " + d[3].replace(':', '');
     return [[self alloc] initWithString:string];
 }
 
